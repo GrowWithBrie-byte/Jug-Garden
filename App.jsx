@@ -417,7 +417,7 @@ style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fon
     </div> // 
   </div> // 
 
-
+)}
 {/* 1. NAME & EMOJI */}
             <div style={{ marginBottom:12 }}>
               <div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant Name</div>
