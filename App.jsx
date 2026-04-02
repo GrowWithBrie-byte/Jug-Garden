@@ -221,7 +221,7 @@ localStorage.setItem('jugGarden_onboarded', 'true');
 const waterPlant = id => setPlants(ps => ps.map(p => p.id === id ? { ...p, lastWatered:TODAY, health:Math.min(100, p.health+15) } : p));
 const toggleSign = (pid, sid) => setPlants(ps => ps.map(p => { if (p.id !== pid) return p; const s = p.transplantSigns||[]; return { ...p, transplantSigns: s.includes(sid) ? s.filter(x=>x!==sid) : [...s,sid] }; }));
 const markTransplanted = id => { setPlants(ps => ps.map(p => p.id!==id ? p : { ...p, planted:TODAY, transplantSigns:[], health:Math.min(100,p.health+10), notes:(p.notes?p.notes+" · ":"")+"Transplanted!" })); setSelectedPlant(null); };
-const addPlant = () => { if (!newPlant.name.trim()) return; setPlants(ps => [...ps, { ...newPlant, id:Date.now(), planted:TODAY, lastWatered:TODAY, health:100, transplantSigns:[] }]); setNewPlant({ name:"",container:"Milk Jug",waterEvery:2,emoji:"🪴",notes:"" }); setShowAdd(false); setCustomMode(false); };
+const addPlant = () => { if (!newPlant.name.trim()) return; setPlants(ps => [...ps, { ...newPlant, id:Date.now(), planted: newPlant.plantedDate || TODAY, lastWatered:TODAY, health:100, transplantSigns:[] }]); setNewPlant({ name:"",container:"Milk Jug",waterEvery:2,emoji:"🪴",notes:"" }); setShowAdd(false); setCustomMode(false); };
 
 const thirstyCount = plants.filter(p=>daysSince(p.lastWatered)>=p.waterEvery).length;
 const transplantReady = plants.filter(p=>{ const ts=getTS(p,daysSince(p.planted)); return ts.urgency==="ready"||ts.urgency==="urgent"; });
