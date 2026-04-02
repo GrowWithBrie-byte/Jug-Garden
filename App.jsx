@@ -444,10 +444,13 @@ Water every <b style={{color:"#29b6f6"}}>{newPlant.waterEvery} days</b>
 </div>
 
 {/* 5. ADD BUTTON */}
-<button onClick={addPlant} 
-style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width:"100%", padding:14, fontSize:14 }}>
+<button
+onClick={addPlant}
+style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width:"100%", padding:14, fontSize:14, marginTop:10 }}
+>
 🌱 Add to My Garden
 </button>
+
 </div>
 </div>
 )}
