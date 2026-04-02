@@ -665,11 +665,8 @@ return (
 )}
 </div>
 )}
-</div>
-)}
-
-</div> {/* This closes the main padding div for your tabs */}
-    )} {/* This closes the logic for your last tab (likely tab === "calc") */}
+</div> {/* This closes the internal scrollable area for your tabs */}
+    )} {/* This closes the active tab logic (e.g., tab === "calc") */}
 
     {/* ── PLANT DETAIL OVERLAY ── */}
     {selectedPlant && (() => {
