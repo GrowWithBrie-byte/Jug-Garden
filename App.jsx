@@ -290,7 +290,7 @@ return (
 <div style={{ padding:"10px 12px 80px" }}>
 
 {/* ── MY GARDEN ── */}
-{tab==="garden" && (
+{tab === "garden" && (
 <div>
 {myZone ? (
 <div style={{ ...card, background:`linear-gradient(135deg,${myZone.color},white)`, border:`1.5px solid ${myZone.tc}20`, display:"flex", alignItems:"center", gap:9 }}>
@@ -346,7 +346,8 @@ return (
 {plants.length===0 && <div style={{ textAlign:"center", padding:"36px 0", color:"#aaa" }}><div style={{ fontSize:44 }}>🪴</div><div style={{ fontWeight:800, marginTop:8 }}>No plants yet! Add your first above.</div></div>}
 
 {/* ADD PLANT SHEET */}
-<div 
+      {showAdd && (
+        <div 
           style={{ position:"fixed", inset:0, background:"#0008", zIndex:100, display:"flex", alignItems:"flex-end", justifyContent:"center" }} 
           onClick={() => { setShowAdd(false); setCustomMode(false); }}
         >
@@ -355,6 +356,20 @@ return (
             onClick={ev => ev.stopPropagation()}
           >
             <div style={{ fontWeight:900, fontSize:16, color:"#2e7d32", marginBottom:11 }}>🌱 Add New Plant</div>
+
+            {/* 1. NAME & EMOJI */}
+            <div style={{ marginBottom:12 }}>
+              <div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant Name</div>
+              <div style={{ display:"flex", gap:7, alignItems:"center" }}>
+                <span style={{ fontSize:24 }}>{newPlant.emoji}</span>
+                <input
+                  value={newPlant.name}
+                  onChange={ev => setNewPlant(p => ({ ...p, name: ev.target.value }))}
+                  placeholder="e.g. Cherry Tomatoes"
+                  style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fontSize:14, fontFamily:"inherit", outline:"none" }}
+                />
+              </div>
+            </div>
 
 {/* NAME INPUT */}
 <div style={{ marginBottom:12 }}>
@@ -404,31 +419,30 @@ style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fon
 
 
 {/* 1. NAME & EMOJI */}
-<div style={{ marginBottom:12 }}>
-        <div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant Name</div>
-        <div style={{ display:"flex", gap:7, alignItems:"center" }}>
-          <span style={{ fontSize:24 }}>{newPlant.emoji}</span>
-          <input
-            value={newPlant.name}
-            onChange={ev => setNewPlant(p => ({ ...p, name: ev.target.value }))}
-            placeholder="e.g. Cherry Tomatoes"
-            style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fontSize:14, fontFamily:"inherit", outline:"none" }}
-          />
-        </div>
-      </div>
+            <div style={{ marginBottom:12 }}>
+              <div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant Name</div>
+              <div style={{ display:"flex", gap:7, alignItems:"center" }}>
+                <span style={{ fontSize:24 }}>{newPlant.emoji}</span>
+                <input
+                  value={newPlant.name}
+                  onChange={ev => setNewPlant(p => ({ ...p, name: ev.target.value }))}
+                  placeholder="e.g. Cherry Tomatoes"
+                  style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fontSize:14, fontFamily:"inherit", outline:"none" }}
+                />
+              </div>
+            </div>
 
-{/* 2. CALENDAR (The New Part!) */}
-<div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📅 Planting Date</div>
-        <input
-          type="date"
-          value={newPlant.plantedDate || TODAY}
-          onChange={(ev) => setNewPlant(p => ({ ...p, plantedDate: ev.target.value }))}
-          style={{ width: "100%", border: "2px solid #e8f5e9", borderRadius: 12, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff", boxSizing: "border-box" }}
-        />
-      </div>
+{/* 2. CALENDAR INPUT */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📅 Planting Date</div>
+              <input
+                type="date"
+                value={newPlant.plantedDate || TODAY}
+                onChange={(ev) => setNewPlant(p => ({ ...p, plantedDate: ev.target.value }))}
+                style={{ width: "100%", border: "2px solid #e8f5e9", borderRadius: 12, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff", boxSizing: "border-box" }}
+              />
+            </div>
 
-{/* 3. SCROLLABLE CONTAINER LIST */}
 {/* 3. CONTAINER SELECT */}
       <div style={{ marginBottom: 12 }}>
         <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📦 Container Type</div>
