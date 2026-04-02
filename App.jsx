@@ -356,76 +356,17 @@ return (
             onClick={ev => ev.stopPropagation()}
           >
             <div style={{ fontWeight:900, fontSize:16, color:"#2e7d32", marginBottom:11 }}>🌱 Add New Plant</div>
-
-            {/* 1. NAME & EMOJI */}
-            <div style={{ marginBottom:12 }}>
-              <div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant Name</div>
-              <div style={{ display:"flex", gap:7, alignItems:"center" }}>
-                <span style={{ fontSize:24 }}>{newPlant.emoji}</span>
+     
+{/* 1. NAME & EMOJI + NAME INPUT */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#666", marginBottom: 3 }}>Plant Name</div>
+              <div style={{ display: "flex", gap: 7, alignItems: "center" }}>
+                <span style={{ fontSize: 24 }}>{newPlant.emoji}</span>
                 <input
                   value={newPlant.name}
                   onChange={ev => setNewPlant(p => ({ ...p, name: ev.target.value }))}
-                  placeholder="e.g. Cherry Tomatoes"
-                  style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fontSize:14, fontFamily:"inherit", outline:"none" }}
-                />
-              </div>
-            </div>
-
-{/* NAME INPUT */}
-<div style={{ marginBottom:12 }}>
-<div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant Name</div>
-<div style={{ display:"flex", gap:7, alignItems:"center" }}>
-<span style={{ fontSize:24 }}>{newPlant.emoji}</span>
-<input
-value={newPlant.name}
-onChange={ev=>setNewPlant(p=>({...p, name:ev.target.value}))}
-placeholder="e.g. Cherry Tomatoes"
-style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fontSize:14, fontFamily:"inherit", outline:"none" }}
-/>
-</div>
-</div>
-
-{/* CALENDAR INPUT */}
-<div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📅 Planting Date</div>
-              <input
-                type="date"
-                value={newPlant.plantedDate || TODAY}
-                onChange={(ev) => setNewPlant(p => ({ ...p, plantedDate: ev.target.value }))}
-                style={{ width: "100%", border: "2px solid #e8f5e9", borderRadius: 12, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff", boxSizing: "border-box" }}
-              />
-            </div>
-
-{/* SCROLLABLE CONTAINER LIST */}
-<div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📦 Container Type</div>
-              <select
-                value={newPlant.container}
-                onChange={(ev) => setNewPlant(p => ({ ...p, container: ev.target.value }))}
-                style={{ width: "100%", border: "2px solid #e0e0e0", borderRadius: 9, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff" }}
-              >
-                {CONTAINER_TYPES.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
-
-            <button onClick={addPlant} style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width:"100%", padding:14, fontSize:16 }}>
-              Add Plant
-            </button>
-          </div>
-        </div>
-      )}
-    </div> // 
- 
-{/* 1. NAME & EMOJI */}
-            <div style={{ marginBottom:12 }}>
-              <div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant Name</div>
-              <div style={{ display:"flex", gap:7, alignItems:"center" }}>
-                <span style={{ fontSize:24 }}>{newPlant.emoji}</span>
-                <input
-                  value={newPlant.name}
-                  onChange={ev => setNewPlant(p => ({ ...p, name: ev.target.value }))}
-                  placeholder="e.g. Cherry Tomatoes"
-                  style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fontSize:14, fontFamily:"inherit", outline:"none" }}
+                  placeholder="e.g. Basil"
+                  style={{ flex: 1, border: "2px solid #e0e0e0", borderRadius: 9, padding: "10px", fontSize: 14, fontFamily: "inherit", outline: "none" }}
                 />
               </div>
             </div>
@@ -441,25 +382,19 @@ style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fon
               />
             </div>
 
-{/* 3. CONTAINER SELECT */}
-      <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📦 Container Type</div>
-        <select
-          value={newPlant.container}
-          onChange={(ev) => setNewPlant(p => ({ ...p, container: ev.target.value }))}
-          style={{ width: "100%", border: "2px solid #e0e0e0", borderRadius: 9, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff" }}
-        >
-          {CONTAINER_TYPES.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-      </div>
+{/* 3. SCROLLABLE CONTAINER LIST / SELECT */}
+            <div style={{ marginBottom: 12 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📦 Container Type</div>
+              <select
+                value={newPlant.container}
+                onChange={(ev) => setNewPlant(p => ({ ...p, container: ev.target.value }))}
+                style={{ width: "100%", border: "2px solid #e0e0e0", borderRadius: 9, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff" }}
+              >
+                {CONTAINER_TYPES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
 
-      <button onClick={addPlant} style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width:"100%", padding:14, fontSize:16, marginTop:10 }}>
-        🚀 Add to My Garden
-      </button>
-      
-    </div> {/* Closes the white sheet */}
-  </div> {/* Closes the dark overlay */}
-)}
+     )}
 
 {/* 4. WATERING SLIDER */}
 <div style={{ marginBottom:14 }}>
