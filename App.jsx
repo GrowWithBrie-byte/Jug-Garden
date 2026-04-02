@@ -668,10 +668,11 @@ return (
 </div>
 )}
 
-</div>
+</div> {/* This closes the main padding div for your tabs */}
+    )} {/* This closes the logic for your last tab (likely tab === "calc") */}
 
-{/* ── PLANT DETAIL OVERLAY ── */}
-      {selectedPlant && (() => {
+    {/* ── PLANT DETAIL OVERLAY ── */}
+    {selectedPlant && (() => {
         const p = plants.find(pl => pl.id === selectedPlant.id) || selectedPlant;
         const days = daysSince(p.planted);
         const wr = getWateringRange(p.waterEvery, myZone, p.container);
@@ -731,10 +732,10 @@ return (
               </div>
             </div>
           </div>
-        );
-      })()}
-
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');`}</style>
+    </div>
+  );
+}
     </div>
   );
 }
