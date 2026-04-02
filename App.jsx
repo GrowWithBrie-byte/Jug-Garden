@@ -382,10 +382,28 @@ return (
 <div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Notes</div>
 <input value={newPlant.notes} onChange={ev=>setNewPlant(p=>({...p,notes:ev.target.value}))} placeholder="Optional…" style={{ width:"100%", border:"2px solid #e0e0e0", borderRadius:9, padding:"8px 9px", fontSize:12, fontFamily:"inherit", boxSizing:"border-box", outline:"none" }} />
 </div>
-<div style={{ marginBottom:9 }}>
-<div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Container</div>
-<select value={newPlant.container} onChange={ev=>setNewPlant(p=>({...p,container:ev.target.value}))} style={{ width:"100%", border:"2px solid #e0e0e0", borderRadius:9, padding:"8px 9px", fontSize:12, fontFamily:"inherit", background:"#fff" }}>
-{CONTAINER_TYPES.map(c=><option key={c}>{c}</option>)}
+<div style={{ marginBottom: 9 }}>
+<div style={{ fontSize: 10, fontWeight: 700, color: "#666", marginBottom: 3 }}>
+Choose Container
+</div>
+<select
+value={newPlant.container}
+onChange={(ev) => setNewPlant(p => ({ ...p, container: ev.target.value }))}
+style={{
+width: "100%",
+border: "2px solid #e0e0e0",
+borderRadius: 9,
+padding: "8px 9px",
+fontSize: 12,
+fontFamily: "inherit",
+background: "#fff",
+cursor: "pointer"
+}}
+>
+{/* This maps through your CONTAINER_TYPES array automatically */}
+{CONTAINER_TYPES.map(type => (
+<option key={type} value={type}>{type}</option>
+))}
 </select>
 </div>
 <div style={{ marginBottom:14 }}>
