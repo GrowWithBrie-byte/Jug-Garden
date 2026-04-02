@@ -349,75 +349,64 @@ return (
 {showAdd && (
 <div style={{ position:"fixed", inset:0, background:"#0008", zIndex:100, display:"flex", alignItems:"flex-end", justifyContent:"center" }} onClick={()=>{setShowAdd(false);setCustomMode(false);}}>
 <div style={{ background:"#fff", borderRadius:"22px 22px 0 0", padding:18, width:"100%", maxWidth:480, paddingBottom:34, maxHeight:"86vh", overflowY:"auto" }} onClick={ev=>ev.stopPropagation()}>
+<div style={{ fontWeight:900, fontSize:16, color:"#2e7d32", marginBottom:11 }}>{/* ADD PLANT SHEET */}
+{showAdd && (
+<div style={{ position:"fixed", inset:0, background:"#0008", zIndex:100, display:"flex", alignItems:"flex-end", justifyContent:"center" }} onClick={()=>{setShowAdd(false);setCustomMode(false);}}>
+<div style={{ background:"#fff", borderRadius:"22px 22px 0 0", padding:18, width:"100%", maxWidth:480, paddingBottom:34, maxHeight:"86vh", overflowY:"auto" }} onClick={ev=>ev.stopPropagation()}>
+
 <div style={{ fontWeight:900, fontSize:16, color:"#2e7d32", marginBottom:11 }}>🌱 Add New Plant</div>
-<div style={{ display:"flex", background:"#f5f5f5", borderRadius:9, padding:3, marginBottom:12, gap:3 }}>
-{[["🌿 Common", false],["✏️ My Own", true]].map(([l,m]) => (
-<button key={l} onClick={()=>setCustomMode(m)} style={{ flex:1, background:customMode===m?(m?"linear-gradient(135deg,#ff7043,#ff8a65)":"linear-gradient(135deg,#43a047,#66bb6a)"):"transparent", color:customMode===m?"#fff":"#666", border:"none", borderRadius:7, padding:"6px 4px", fontWeight:800, fontSize:11, cursor:"pointer", fontFamily:"inherit" }}>{l}</button>
-))}
-</div>
-{!customMode && (
-<>
-<div style={{ fontSize:11, color:"#666", fontWeight:700, marginBottom:5 }}>Tap icon to auto-fill 👇</div>
-<div style={{ display:"flex", gap:5, marginBottom:12, flexWrap:"wrap" }}>
-{Object.entries(EMOJI_PRESETS).map(([em,pr]) => (
-<button key={em} onClick={()=>setNewPlant(p=>({...p,emoji:em,name:pr.name||p.name,container:pr.container,waterEvery:pr.waterEvery}))} style={{ fontSize:24, background:newPlant.emoji===em?"#e8f5e9":"#f5f5f5", border:newPlant.emoji===em?"2px solid #43a047":"2px solid #e0e0e0", borderRadius:9, padding:"4px 6px", cursor:"pointer" }}>{em}</button>
-))}
-</div>
-</>
-)}
-{customMode && (
-<div style={{ background:"#fff8f5", borderRadius:12, padding:11, marginBottom:12, border:"2px solid #ffe0b2" }}>
-<div style={{ fontWeight:800, fontSize:11, color:"#e65100", marginBottom:6 }}>Type any plant name:</div>
-<input value={newPlant.name} onChange={ev=>{setNewPlant(p=>({...p,name:ev.target.value}));}} placeholder="e.g. Lavender, Eggplant…" style={{ width:"100%", border:"2px solid #ffe0b2", borderRadius:7, padding:"8px 9px", fontSize:12, fontFamily:"inherit", outline:"none", boxSizing:"border-box" }} />
-</div>
-)}
-<div style={{ marginBottom:9 }}>
-<div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant name</div>
+
+{/* 1. NAME & EMOJI */}
+<div style={{ marginBottom:12 }}>
+<div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Plant Name</div>
 <div style={{ display:"flex", gap:7, alignItems:"center" }}>
 <span style={{ fontSize:24 }}>{newPlant.emoji}</span>
-<input value={newPlant.name} onChange={ev=>setNewPlant(p=>({...p,name:ev.target.value}))} placeholder="e.g. Cherry Tomatoes" style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"8px 9px", fontSize:12, fontFamily:"inherit", outline:"none" }} />
+<input
+value={newPlant.name}
+onChange={ev=>setNewPlant(p=>({...p, name:ev.target.value}))}
+placeholder="e.g. Cherry Tomatoes"
+style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fontSize:14, fontFamily:"inherit", outline:"none" }}
+/>
 </div>
 </div>
-<div style={{ marginBottom:9 }}>
-<div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>Notes</div>
-<input value={newPlant.notes} onChange={ev=>setNewPlant(p=>({...p,notes:ev.target.value}))} placeholder="Optional…" style={{ width:"100%", border:"2px solid #e0e0e0", borderRadius:9, padding:"8px 9px", fontSize:12, fontFamily:"inherit", boxSizing:"border-box", outline:"none" }} />
+
+{/* 2. CALENDAR (The New Part!) */}
+<div style={{ marginBottom: 12 }}>
+<div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📅 Planting Date</div>
+<input
+type="date"
+value={newPlant.plantedDate || TODAY}
+onChange={(ev) => setNewPlant(p => ({ ...p, plantedDate: ev.target.value }))}
+style={{ width: "100%", border: "2px solid #e8f5e9", borderRadius: 12, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff", boxSizing: "border-box" }}
+/>
 </div>
-<div style={{ marginBottom: 9 }}>
-<div style={{ fontSize: 10, fontWeight: 700, color: "#666", marginBottom: 3 }}>
-Choose Container
-</div>
+
+{/* 3. SCROLLABLE CONTAINER LIST */}
+<div style={{ marginBottom: 12 }}>
+<div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📦 Container Type</div>
 <select
 value={newPlant.container}
 onChange={(ev) => setNewPlant(p => ({ ...p, container: ev.target.value }))}
-style={{
-width: "100%",
-border: "2px solid #e0e0e0",
-borderRadius: 9,
-padding: "8px 9px",
-fontSize: 12,
-fontFamily: "inherit",
-background: "#fff",
-cursor: "pointer"
-}}
+style={{ width: "100%", border: "2px solid #e0e0e0", borderRadius: 9, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff" }}
 >
-{/* This maps through your CONTAINER_TYPES array automatically */}
-{CONTAINER_TYPES.map(type => (
-<option key={type} value={type}>{type}</option>
-))}
+{CONTAINER_TYPES.map(c => <option key={c} value={c}>{c}</option>)}
 </select>
 </div>
+
+{/* 4. WATERING SLIDER */}
 <div style={{ marginBottom:14 }}>
 <div style={{ fontSize:10, fontWeight:700, color:"#666", marginBottom:3 }}>
-Water every <b style={{color:"#29b6f6"}}>{newPlant.waterEvery}d</b>
-{myZone&&(()=>{ const r=getWateringRange(newPlant.waterEvery,myZone,newPlant.container); return <span style={{color:myZone.tc,marginLeft:5}}> → {myZone.emoji} {wLabel(r)}</span>; })()}
+Water every <b style={{color:"#29b6f6"}}>{newPlant.waterEvery} days</b>
 </div>
-<input type="range" min={1} max={7} value={newPlant.waterEvery} onChange={ev=>setNewPlant(p=>({...p,waterEvery:+ev.target.value}))} style={{ width:"100%", accentColor:"#29b6f6" }} />
-<div style={{ fontSize:9, color:"#2e7d32", background:"#e8f5e9", borderRadius:7, padding:"4px 7px", marginTop:5 }}>👆 Always finger-test soil 1" deep before watering.</div>
+<input type="range" min={1} max={14} value={newPlant.waterEvery} onChange={ev=>setNewPlant(p=>({...p, waterEvery:+ev.target.value}))} style={{ width:"100%", accentColor:"#29b6f6" }} />
 </div>
-<button onClick={addPlant} style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width:"100%", padding:12, fontSize:14 }}>🌱 Add to My Garden</button>
+
+{/* 5. ADD BUTTON */}
+<button onClick={addPlant} style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width:"100%", padding:14, fontSize:14 }}>
+🌱 Add to My Garden
+</button>
+
 </div>
-</div>
-)}
 </div>
 )}
 
