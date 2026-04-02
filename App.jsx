@@ -346,11 +346,15 @@ return (
 {plants.length===0 && <div style={{ textAlign:"center", padding:"36px 0", color:"#aaa" }}><div style={{ fontSize:44 }}>🪴</div><div style={{ fontWeight:800, marginTop:8 }}>No plants yet! Add your first above.</div></div>}
 
 {/* ADD PLANT SHEET */}
-{showAdd && (
-<div style={{ position:"fixed", inset:0, background:"#0008", zIndex:100, display:"flex", alignItems:"flex-end", justifyContent:"center" }} onClick={()=>{setShowAdd(false);setCustomMode(false);}}>
-<div style={{ background:"#fff", borderRadius:"22px 22px 0 0", padding:18, width:"100%", maxWidth:480, paddingBottom:34, maxHeight:"86vh", overflowY:"auto" }} onClick={ev=>ev.stopPropagation()}>
-
-<div style={{ fontWeight:900, fontSize:16, color:"#2e7d32", marginBottom:11 }}>🌱 Add New Plant</div>
+<div 
+          style={{ position:"fixed", inset:0, background:"#0008", zIndex:100, display:"flex", alignItems:"flex-end", justifyContent:"center" }} 
+          onClick={() => { setShowAdd(false); setCustomMode(false); }}
+        >
+          <div 
+            style={{ background:"#fff", borderRadius:"22px 22px 0 0", padding:18, width:"100%", maxWidth:480, paddingBottom:34, maxHeight:"86vh", overflowY:"auto" }} 
+            onClick={ev => ev.stopPropagation()}
+          >
+            <div style={{ fontWeight:900, fontSize:16, color:"#2e7d32", marginBottom:11 }}>🌱 Add New Plant</div>
 
 {/* NAME INPUT */}
 <div style={{ marginBottom:12 }}>
@@ -368,34 +372,35 @@ style={{ flex:1, border:"2px solid #e0e0e0", borderRadius:9, padding:"10px", fon
 
 {/* CALENDAR INPUT */}
 <div style={{ marginBottom: 12 }}>
-<div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📅 Planting Date</div>
-<input
-type="date"
-value={newPlant.plantedDate || TODAY}
-onChange={(ev) => setNewPlant(p => ({ ...p, plantedDate: ev.target.value }))}
-style={{ width: "100%", border: "2px solid #e8f5e9", borderRadius: 12, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff", boxSizing: "border-box" }}
-/>
-</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📅 Planting Date</div>
+              <input
+                type="date"
+                value={newPlant.plantedDate || TODAY}
+                onChange={(ev) => setNewPlant(p => ({ ...p, plantedDate: ev.target.value }))}
+                style={{ width: "100%", border: "2px solid #e8f5e9", borderRadius: 12, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff", boxSizing: "border-box" }}
+              />
+            </div>
 
 {/* SCROLLABLE CONTAINER LIST */}
 <div style={{ marginBottom: 12 }}>
-<div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📦 Container Type</div>
-<select
-value={newPlant.container}
-onChange={(ev) => setNewPlant(p => ({ ...p, container: ev.target.value }))}
-style={{ width: "100%", border: "2px solid #e0e0e0", borderRadius: 9, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff" }}
->
-{CONTAINER_TYPES.map(c => <option key={c} value={c}>{c}</option>)}
-</select>
-</div>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#2e7d32", marginBottom: 4 }}>📦 Container Type</div>
+              <select
+                value={newPlant.container}
+                onChange={(ev) => setNewPlant(p => ({ ...p, container: ev.target.value }))}
+                style={{ width: "100%", border: "2px solid #e0e0e0", borderRadius: 9, padding: "10px", fontSize: 14, fontFamily: "inherit", background: "#fff" }}
+              >
+                {CONTAINER_TYPES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
 
-<button onClick={addPlant} style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width:"100%", padding:14, fontSize:14, marginTop: 10 }}>
-🌱 Add to My Garden
-</button>
-
-</div>
-</div>
-)}
+            <button onClick={addPlant} style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width:"100%", padding:14, fontSize:16 }}>
+              Add Plant
+            </button>
+          </div>
+        </div>
+      )}
+    </div> // 
+  </div> // 
 
 
 {/* 1. NAME & EMOJI */}
