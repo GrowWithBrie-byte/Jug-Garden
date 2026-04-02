@@ -724,83 +724,70 @@ return (
 </div>
 
 {/* ── PLANT DETAIL OVERLAY ── */}
-{selectedPlant&&(()=>{
-const p = plants.find(pl=>pl.id===selectedPlant.id)||selectedPlant;
-const days = daysSince(p.planted);
-const wr = getWateringRange(p.waterEvery, myZone, p.container);
-const ts = getTS(p, days);
-const ur = UR[ts.urgency];
-const thirsty = daysSince(p.lastWatered) >= p.waterEvery;
-return (
-<div style={{ position:"fixed", inset:0, zIndex:200, background:"linear-gradient(160deg,#e8f5e9,#fffde7)", maxWidth:480, margin:"0 auto", overflowY:"auto" }}>
-<div style={{ background:"linear-gradient(90deg,#43a047,#66bb6a)", padding:"14px 14px 16px", borderRadius:"0 0 22px 22px", boxShadow:"0 4px 18px #43a04740" }}>
-<div style={{ display:"flex", alignItems:"center", gap:9 }}>
-<button onClick={()=>setSelectedPlant(null)} style={{ background:"rgba(255,255,255,0.25)", border:"none", borderRadius:7, padding:"4px 9px", color:"#fff", fontWeight:800, fontSize:12, cursor:"pointer", fontFamily:"inherit" }}>← Back</button>
-<span style={{ fontSize:38 }}>{p.emoji}</span>
-<div><div style={{ color:"#fff", fontWeight:900, fontSize:17 }}>{p.name}</div><div style={{ color:"#c8e6c9", fontSize:10 }}>📦 {p.container} · 🗓 {days} days old</div></div>
-</div>
-<div style={{ marginTop:11 }}>
-<div style={{ display:"flex", justifyContent:"space-between", color:"#c8e6c9", fontSize:9, marginBottom:3 }}><span>Health</span><span>❤️ {p.health}%</span></div>
-<div style={{ background:"rgba(255,255,255,0.25)", borderRadius:7, height:7 }}>
-<div style={{ height:"100%", width:p.health+"%", background:p.health>70?"#fff":p.health>40?"#ffcc02":"#ff7043", borderRadius:7 }} />
-</div>
-</div>
-</div>
-<div style={{ padding:"12px 12px 60px" }}>
-<div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:9, marginBottom:10 }}>
-<div style={{ ...card, background:thirsty?"linear-gradient(135deg,#fff3e0,#ffe0b2)":"#fff", border:thirsty?"2px solid #ff9800":"2px solid #e3f2fd" }}>
-<div style={{ fontSize:20 }}>💧</div>
-<div style={{ fontWeight:900, fontSize:11, color:thirsty?"#e65100":"#1565c0", marginTop:4 }}>{thirsty?"Needs water!":"Watered"}</div>
-<div style={{ fontSize:9, color:"#666" }}>{daysSince(p.lastWatered)}d ago</div>
-<div style={{ fontSize:9, color:"#888" }}>{myZone?myZone.emoji+" "+wLabel(wr):"Every "+p.waterEvery+"d"}</div>
-<button onClick={()=>waterPlant(p.id)} style={{...btn("linear-gradient(135deg,#29b6f6,#4dd0e1)"),marginTop:7,padding:"4px 9px",fontSize:10}}>💧 Water now</button>
-</div>
-<div style={card}>
-<div style={{ fontSize:20 }}>🗓</div>
-<div style={{ fontWeight:900, fontSize:11, color:"#2e7d32", marginTop:4 }}>Day {days}</div>
-<div style={{ fontSize:9, color:"#888" }}>Since planting</div>
-{myZone&&<div style={{ fontSize:9, color:myZone.tc, fontWeight:700, marginTop:2 }}>{myZone.emoji} Zone {myZone.zone}</div>}
-<div style={{ fontSize:9, color:"#aaa" }}>{p.container}</div>
-</div>
-</div>
-<div style={{ ...card, background:"#e8f5e9", fontSize:10, color:"#2e7d32", marginBottom:9 }}>
-👆 <b>Finger test:</b> poke 1" into soil — water only if dry.{p.container==="Fabric Bag"?" Fabric bags dry fast — check daily!":p.container==="Coffee Can"?" Metal cans heat up — check often in summer.":""}
-</div>
-{p.notes&&<div style={{ ...card, background:"#fffde7", border:"1.5px solid #fff9c4", marginBottom:9 }}><div style={{ fontWeight:800, fontSize:10, color:"#f57f17", marginBottom:2 }}>📝 Notes</div><div style={{ fontSize:11, color:"#555", fontStyle:"italic" }}>"{p.notes}"</div></div>}
-<div style={{ ...card, background:ur.bg, border:`2px solid ${ur.border}`, marginBottom:9 }}>
-<div style={{ fontWeight:900, fontSize:12, color:ur.color, marginBottom:9 }}>🪴 Transplant Status — {ur.label}</div>
-<div style={{ marginBottom:9 }}>
-<div style={{ display:"flex", justifyContent:"space-between", fontSize:9, fontWeight:700, color:"#666", marginBottom:3 }}><span>Time in container</span><span>{days}d / {ts.daysMin}–{ts.daysMax}d window</span></div>
-<div style={{ background:"rgba(0,0,0,0.08)", borderRadius:7, height:8, overflow:"hidden" }}>
-<div style={{ height:"100%", width:Math.min(100,(days/ts.daysMax)*100)+"%", background:ts.urgency==="urgent"?"#ff6f00":ts.urgency==="ready"?"#f9a825":ts.urgency==="watch"?"#aed581":"#66bb6a", borderRadius:7 }} />
-</div>
-</div>
-<div style={{ fontWeight:800, fontSize:10, color:"#555", marginBottom:5 }}>Check any signs you notice:</div>
-{VISUAL_SIGNS.map(sign=>{
-const checked=(p.transplantSigns||[]).includes(sign.id);
-return (
-<button key={sign.id} onClick={()=>toggleSign(p.id,sign.id)} style={{ display:"flex", alignItems:"center", gap:7, background:checked?"#fff3e0":"rgba(255,255,255,0.8)", border:checked?"2px solid #ff9800":"2px solid #e0e0e0", borderRadius:8, padding:"6px 9px", cursor:"pointer", fontFamily:"inherit", textAlign:"left", width:"100%", marginBottom:4 }}>
-<span style={{ fontSize:15, flexShrink:0 }}>{checked?"✅":"⬜"}</span>
-<span style={{ fontSize:10, fontWeight:checked?800:600, color:checked?"#e65100":"#555" }}>{sign.icon} {sign.label}</span>
-</button>
-);
-})}
-{ts.signs>0&&<div style={{ background:"rgba(255,255,255,0.85)", borderRadius:7, padding:"6px 9px", marginTop:7, marginBottom:9, fontSize:10, color:"#555" }}>{ts.signs>=3?"🚨 3+ signs — definitely root-bound. Move it up!":ts.signs===2?"⚠️ 2 signs — getting crowded. Plan transplant soon.":"👀 1 sign — keep watching this week."}</div>}
-<div style={{ background:"rgba(255,255,255,0.85)", borderRadius:9, padding:"8px 10px", marginBottom:9 }}>
-<div style={{ fontWeight:900, fontSize:10, color:"#2e7d32", marginBottom:2 }}>➡️ Recommended next container</div>
-<div style={{ fontWeight:800, fontSize:13, color:"#1b5e20" }}>{ts.next} <span style={{ fontSize:10, color:"#888", fontWeight:600 }}>({ts.nextVol})</span></div>
-<div style={{ fontSize:9, color:"#666", marginTop:2 }}>💡 Transplant 1–2 days after watering. Loosen roots gently.</div>
-</div>
-<div style={{ display:"flex", gap:7 }}>
-<button onClick={()=>markTransplanted(p.id)} style={{...btn("linear-gradient(135deg,#43a047,#66bb6a)"),width:"100%",padding:"9px 7px",fontSize:10}}>✅ Mark as Transplanted</button>
-</div>
-</div>
-</div>
-</div>
-);
-})()}
+      {selectedPlant && (() => {
+        const p = plants.find(pl => pl.id === selectedPlant.id) || selectedPlant;
+        const days = daysSince(p.planted);
+        const wr = getWateringRange(p.waterEvery, myZone, p.container);
+        const ts = getTS(p, days);
+        const ur = UR[ts.urgency];
+        const thirsty = daysSince(p.lastWatered) >= p.waterEvery;
+        
+        return (
+          <div style={{ position: "fixed", inset: 0, zIndex: 200, background: "linear-gradient(160deg,#e8f5e9,#fffde7)", maxWidth: 480, margin: "0 auto", overflowY: "auto" }}>
+            <div style={{ background: "linear-gradient(90deg,#43a047,#66bb6a)", padding: "14px 14px 16px", borderRadius: "0 0 22px 22px", boxShadow: "0 4px 18px #43a04740" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                <button onClick={() => setSelectedPlant(null)} style={{ background: "rgba(255,255,255,0.25)", border: "none", borderRadius: 7, padding: "4px 9px", color: "#fff", fontWeight: 800, fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}>← Back</button>
+                <span style={{ fontSize: 38 }}>{p.emoji}</span>
+                <div>
+                  <div style={{ color: "#fff", fontWeight: 900, fontSize: 17 }}>{p.name}</div>
+                  <div style={{ color: "#c8e6c9", fontSize: 10 }}>📦 {p.container} · 🗓 {days} days old</div>
+                </div>
+              </div>
+              <div style={{ marginTop: 11 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", color: "#c8e6c9", fontSize: 9, marginBottom: 3 }}><span>Health</span><span>❤️ {p.health}%</span></div>
+                <div style={{ background: "rgba(255,255,255,0.25)", borderRadius: 7, height: 7 }}>
+                  <div style={{ height: "100%", width: p.health + "%", background: p.health > 70 ? "#fff" : p.health > 40 ? "#ffcc02" : "#ff7043", borderRadius: 7 }} />
+                </div>
+              </div>
+            </div>
+            
+            <div style={{ padding: "12px 12px 60px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 9, marginBottom: 10 }}>
+                <div style={{ ...card, background: thirsty ? "linear-gradient(135deg,#fff3e0,#ffe0b2)" : "#fff", border: thirsty ? "2px solid #ff9800" : "2px solid #e3f2fd" }}>
+                  <div style={{ fontSize: 20 }}>💧</div>
+                  <div style={{ fontWeight: 900, fontSize: 11, color: thirsty ? "#e65100" : "#1565c0", marginTop: 4 }}>{thirsty ? "Needs water!" : "Watered"}</div>
+                  <div style={{ fontSize: 9, color: "#666" }}>{daysSince(p.lastWatered)}d ago</div>
+                  <button onClick={() => waterPlant(p.id)} style={{ ...btn("linear-gradient(135deg,#29b6f6,#4dd0e1)"), marginTop: 7, padding: "4px 9px", fontSize: 10 }}>💧 Water now</button>
+                </div>
+                
+                <div style={card}>
+                  <div style={{ fontSize: 20 }}>🗓</div>
+                  <div style={{ fontWeight: 900, fontSize: 11, color: "#2e7d32", marginTop: 4 }}>Day {days}</div>
+                  <div style={{ fontSize: 9, color: "#888" }}>Since planting</div>
+                  {myZone && <div style={{ fontSize: 9, color: myZone.tc, fontWeight: 700, marginTop: 2 }}>{myZone.emoji} Zone {myZone.zone}</div>}
+                </div>
+              </div>
 
-<style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');`}</style>
-</div>
-);
+              {/* Status & Signs */}
+              <div style={{ ...card, background: ur.bg, border: `2px solid ${ur.border}`, marginBottom: 9 }}>
+                <div style={{ fontWeight: 900, fontSize: 12, color: ur.color, marginBottom: 9 }}>🪴 Status: {ur.label}</div>
+                {VISUAL_SIGNS.map(sign => {
+                  const checked = (p.transplantSigns || []).includes(sign.id);
+                  return (
+                    <button key={sign.id} onClick={() => toggleSign(p.id, sign.id)} style={{ display: "flex", alignItems: "center", gap: 7, background: checked ? "#fff3e0" : "rgba(255,255,255,0.8)", border: checked ? "2px solid #ff9800" : "2px solid #e0e0e0", borderRadius: 8, padding: "6px 9px", cursor: "pointer", width: "100%", marginBottom: 4 }}>
+                      <span style={{ fontSize: 15 }}>{checked ? "✅" : "⬜"}</span>
+                      <span style={{ fontSize: 10 }}>{sign.icon} {sign.label}</span>
+                    </button>
+                  );
+                })}
+                <button onClick={() => markTransplanted(p.id)} style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width: "100%", marginTop: 10 }}>Mark as Transplanted</button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');`}</style>
+    </div>
+  );
 }
