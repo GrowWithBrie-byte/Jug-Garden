@@ -726,10 +726,10 @@ return (
                 <button onClick={() => markTransplanted(p.id)} style={{ ...btn("linear-gradient(135deg,#43a047,#66bb6a)"), width: "100%", marginTop: 10 }}>Mark as Transplanted</button>
               </div> {/* Closes the inner detail content */}
           </div> {/* Closes the white detail sheet */}
-        </div> 
-      )} {/* <--- THIS IS THE MISSING BRACKET! It closes the selectedPlant logic */}
+      </div>
+        })()}
 
-      <style dangerouslySetInnerHTML={{ __html: "@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');" }} />
+        <style dangerouslySetInnerHTML={{ __html: "@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');" }} />
     </div>
   );
 }
