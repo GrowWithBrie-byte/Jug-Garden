@@ -727,11 +727,9 @@ return (
               </div> {/* Closes the inner detail content */}
           </div> {/* Closes the white detail sheet */}
       </div>
-        })}
-
+      )})()}
+      
         <style dangerouslySetInnerHTML={{ __html: "@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap');" }} />
     </div>
-  );
-}
   );
 }
