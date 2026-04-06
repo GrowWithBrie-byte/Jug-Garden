@@ -168,7 +168,114 @@ const UR = {
 const card = { background:"#fff", borderRadius:16, padding:13, marginBottom:10, boxShadow:"0 2px 10px #0001" };
 const btn  = (bg, c="#fff", extra={}) => ({ background:bg, color:c, border:"none", borderRadius:11, padding:"9px 14px", fontWeight:800, fontSize:12, cursor:"pointer", fontFamily:"inherit", ...extra });
 const badge= (bg, c) => ({ background:bg, color:c, borderRadius:8, padding:"2px 7px", fontSize:10, fontWeight:700, display:"inline-block" });
+function AutoDetectZone({ onDetected }) {
+  const [status, setStatus] = useState("idle"); // idle | loading | error
+function guessZoneFromZip(zip) {
+  const n = parseInt(zip);
+  // Very rough US zip → zone mapping
+  const match =
+    n >= 99500 && n <= 99999 ? "1a" : // Alaska
+    n >= 96700 && n <= 96899 ? "11a" : // Hawaii
+    n >= 33000 && n <= 34999 ? "9b" : // S. Florida
+    n >= 32000 && n <= 32999 ? "8b" : // N. Florida
+    n >= 30000 && n <= 31999 ? "7b" : // Georgia
+    n >= 35000 && n <= 36999 ? "7a" : // Alabama
+    n >= 37000 && n <= 38599 ? "6b" : // Tennessee
+    n >= 39000 && n <= 39799 ? "7b" : // Mississippi
+    n >= 70000 && n <= 71599 ? "8a" : // Louisiana
+    n >= 75000 && n <= 79999 ? "7a" : // Texas
+    n >= 85000 && n <= 86599 ? "9a" : // Arizona
+    n >= 90000 && n <= 93599 ? "9b" : // S. California
+    n >= 94000 && n <= 96199 ? "9a" : // N. California
+    n >= 97000 && n <= 97999 ? "8a" : // Oregon
+    n >= 98000 && n <= 99499 ? "8b" : // Washington
+    n >= 59000 && n <= 59999 ? "4a" : // Montana
+    n >= 80000 && n <= 81699 ? "5b" : // Colorado
+    n >= 82000 && n <= 83199 ? "4b" : // Wyoming
+    n >= 83200 && n <= 83999 ? "5a" : // Idaho
+    n >= 84000 && n <= 84799 ? "6a" : // Utah
+    n >= 87000 && n <= 88499 ? "6b" : // New Mexico
+    n >= 89000 && n <= 89899 ? "8b" : // Nevada
+    n >= 55000 && n <= 56799 ? "4a" : // Minnesota
+    n >= 53000 && n <= 54999 ? "5a" : // Wisconsin
+    n >= 60000 && n <= 62999 ? "5b" : // Illinois
+    n >= 46000 && n <= 47999 ? "5b" : // Indiana
+    n >= 43000 && n <= 45999 ? "5b" : // Ohio
+    n >= 48000 && n <= 49999 ? "5a" : // Michigan
+    n >= 40000 && n <= 42799 ? "6a" : // Kentucky
+    n >= 24000 && n <= 26899 ? "6a" : // West Virginia
+    n >= 15000 && n <= 19699 ? "6a" : // Pennsylvania
+    n >= 10000 && n <= 14999 ? "6a" : // New York
+    n >= 6000  && n <= 6999  ? "6b" : // Connecticut
+    n >= 1000  && n <= 2799  ? "6a" : // Mass/NH/VT/ME
+    n >= 7000  && n <= 8999  ? "6b" : // New Jersey
+    n >= 19700 && n <= 19999 ? "7a" : // Delaware
+    n >= 20000 && n <= 21999 ? "7a" : // Maryland/DC
+    n >= 23000 && n <= 23999 ? "7a" : // Virginia
+    n >= 27000 && n <= 28999 ? "7b" : // North Carolina
+    n >= 29000 && n <= 29999 ? "8a" : // South Carolina
+    n >= 57000 && n <= 57999 ? "4b" : // South Dakota
+    n >= 58000 && n <= 58999 ? "4a" : // North Dakota
+    n >= 68000 && n <= 69999 ? "5a" : // Nebraska
+    n >= 66000 && n <= 67999 ? "5b" : // Kansas
+    n >= 63000 && n <= 65999 ? "6a" : // Missouri
+    n >= 71600 && n <= 72999 ? "7a" : // Arkansas
+    n >= 73000 && n <= 74999 ? "6b" : // Oklahoma
+    n >= 50000 && n <= 52999 ? "5a" : // Iowa
+    "5b"; // default fallback
 
+  return ZONES.find(z => z.zone === match) || null;
+}
+  const detect = () => {
+    if (!navigator.geolocation) {
+      setStatus("error");
+      return;
+    }
+    setStatus("loading");
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const res = await fetch(
+            `https://api.zippopotam.us/us/${latitude},${longitude}`
+          );
+          // Zippopotam doesn't do lat/lon — use reverse geocoding instead:
+          const geo = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await geo.json();
+          const zip = data.address?.postcode?.slice(0, 5);
+          if (!zip) throw new Error("No zip");
+
+          // Map zip to zone using a simple lookup
+          const zone = guessZoneFromZip(zip);
+          if (zone) {
+            onDetected(zone);
+          } else {
+            setStatus("error");
+          }
+        } catch {
+          setStatus("error");
+        }
+      },
+      () => setStatus("error"),
+      { timeout: 8000 }
+    );
+  };
+
+  return (
+    <div style={{ textAlign: "center", marginTop: 6 }}>
+      {status === "idle" && (
+        <button onClick={detect}
+          style={{ background: "linear-gradient(135deg,#43a047,#66bb6a)", color: "#fff", border: "none", borderRadius: 10, padding: "7px 16px", fontWeight: 800, fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}>
+          📍 Auto-detect my zone
+        </button>
+      )}
+      {status === "loading" && <div style={{ fontSize: 11, color: "#888" }}>📍 Detecting your location...</div>}
+      {status === "error" && <div style={{ fontSize: 10, color: "#e57373", background: "#ffebee", borderRadius: 8, padding: "4px 10px", display: "inline-block" }}>Couldn't detect automatically — pick from the list below!</div>}
+    </div>
+  );
+}
 export default function App() {
   const [tab, setTab] = useState("garden");
 
@@ -227,7 +334,7 @@ export default function App() {
               <div style={{ fontSize:52 }}>🪴</div>
               <div style={{ fontWeight:900, fontSize:22, color:"#1b5e20", marginTop:8 }}>Welcome to JugGarden!</div>
               <div style={{ fontSize:12, color:"#666", marginTop:5, lineHeight:1.5 }}>Pick your <b>USDA Hardiness Zone</b> to personalize everything for your climate.</div>
-              <div style={{ fontSize:10, color:"#888", background:"#e8f5e9", borderRadius:8, padding:"4px 10px", display:"inline-block", marginTop:6 }}>💡 Not sure? Search "USDA zone [your zip code]"</div>
+              <AutoDetectZone onDetected={(z) => { setMyZone(z); setOnboarding(false); }} />
             </div>
             <div style={{ fontWeight:800, color:"#2e7d32", fontSize:12, marginBottom:8 }}>🗺️ Select Your Zone:</div>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:7, marginBottom:14 }}>
